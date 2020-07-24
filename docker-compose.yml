@@ -1,0 +1,31 @@
+version: "3.8"
+services:
+  mysql:
+    image: mysql:5.7
+    restart: always
+    volumes: 
+      - ./services/mysql/conf.d:/etc/mysql/conf.d:ro
+      - ./services/mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d:ro
+      - ./.data/mysql:/var/lib/mysql
+    environment:
+      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+      - MYSQL_DATABASE=airflow
+      - MYSQL_USER=airflow
+      - MYSQL_PASSWORD=Password123!
+
+  airflow:
+    image: apache/airflow:1.10.10
+    restart: always
+    ports:
+      - "8080:8080"
+    volumes: 
+      - ./services/airflow/entrypoint.sh:/opt/airflow/entrypoint.sh:ro
+      - ./services/airflow/dags:/opt/airflow/dags
+    entrypoint: /opt/airflow/entrypoint.sh
+    depends_on: 
+      - mysql
+    environment: 
+      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=mysql://airflow:Password123!@mysql:3306/airflow
+      - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+    
+    
