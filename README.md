@@ -1,1 +1,3 @@
-mysqlbinlog -R -h src-db -u repl --password=Password123! binlog.000001
+# MySql BinLog Streaming
+
+![flow](flow.png)
