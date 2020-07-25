@@ -1,0 +1,1 @@
+mysqlbinlog -R -h src-db -u repl --password=Password123! binlog.000001
